@@ -1,11 +1,108 @@
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+    <!-- Twitter Bootstrap just for you ben!-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas {
+            height: 100%;
+            width: 100%;
+            margin: auto;
+        }
+    </style>
+
+    <!--theirs: AIzaSyDvHZjKAjM6JTiqXjiPW6choKTD9pt9wwQ-->
+    <!--mine: AIzaSyDiOePrtupF9wiMAz7efv__MPjiLs6NcA8-->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvHZjKAjM6JTiqXjiPW6choKTD9pt9wwQ&sensor=true&libraries=visualization,places,geometry,drawing">
+    </script>
+    <script type="text/javascript">
+
+        // Enable the visual refresh
+        google.maps.visualRefresh = true;
+
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(42.3736, -71.1106),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            };
+            var map = new google.maps.Map(document.getElementById("map-canvas"),
+                    mapOptions);
+
+            map.setTilt(0); // set to 0 to disable or 45 to enable perspective view at low altitude
+            generateData(map);
+        }
+
+        function generateData(map) {
+            // see http://stackoverflow.com/questions/3281524/resize-markers-depending-on-zoom-google-maps-v3/13385310#13385310
+
+            var center = map.getCenter();
+
+            var pointz = [];
+
+            var lat = 42.3736, lng = -71.1106;
+
+            var dx= 0, dy=0;
+            var ddx= 0, ddy=0;
+            delta = 0.002;
+
+            for (var i=0; i<10000; i++) {
+
+                lat += delta*(Math.random()-0.5);
+                lng += delta*(Math.random()-0.5);
+
+                pointz.push(new google.maps.LatLng(lat, lng));
+            }
+
+            var pointArray = new google.maps.MVCArray(pointz);
+
+
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: pointArray
+            });
+
+            heatmap.setMap(map);
+
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+
+                    fillColor: 'yellow',
+                    fillOpacity: 0.8,
+                    scale: 1,
+                    strokeColor: 'gold',
+                    strokeWeight: 14
+                },
+                draggable: true,
+                map: map
+            });
+
+        }
+
+
+
+
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</head>
+<body>
+<h1>This be a map</h1>
+<div id="map-canvas"/>
+</body>
 </html>
+
+
+42.3736° N, 71.1106° W
+Cambridge, Coordinates
+
+42.3958° N, 71.1792° W
